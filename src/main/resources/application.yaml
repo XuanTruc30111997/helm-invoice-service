@@ -1,0 +1,31 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /invoice
+
+spring:
+  application:
+    name: invoice-service
+  profile:
+    active: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: invoice_service_user
+    password: invoice_service_password
+    driverClassName: org.postgresql.Driver
+    schema: invoice
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL81Dialect
+        default_schema: invoice
+    show-sql: true
+
+  liquibase:
+    enabled: false
+    user: postgres
+    roleName: invoice_service_role
+    password: password

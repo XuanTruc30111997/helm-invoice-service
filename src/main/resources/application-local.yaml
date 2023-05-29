@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: invoice_service_user
+    password: invoice_service_password
+    driverClassName: org.postgresql.Driver
+    schema: invoice
+
+  liquibase:
+    enabled: false
+    user: postgres
+    roleName: invoice_service_role
+    password: password

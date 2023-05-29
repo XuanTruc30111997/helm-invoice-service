@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: TrucNguyen
+      comment: "Create ROLE"
+      changes:
+        - sql:
+            sql:
+              DO
+              '
+              BEGIN
+              IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = ''${roleName}'') THEN
+              
+              ELSE
+              CREATE ROLE ${roleName};
+              END IF;
+              END
+              '
+              LANGUAGE PLPGSQL;
+
+  - changeSet:
+      id: 2
+      author: TrucNguyen
+      comment: "Create table invoice"
+      changes:
+        - sql:
+            sql: CREATE TABLE IF NOT EXISTS invoice (id varchar(255) primary key, customer_name varchar(255))
+
+  - changeSet:
+      id: 3
+      author: TrucNguyen
+      comment: "Create table invoice detail"
+      changes:
+        - sql:
+            sql: CREATE TABLE IF NOT EXISTS invoice_detail (id varchar(255) primary key, invoice_id varchar(255), product_id varchar(255), quantity integer, price numeric)
+
+  - changeSet:
+      id: 4
+      author: TrucNguyen
+      comment: "Grant permission to role"
+      changes:
+        - sql:
+            sql:
+              DO
+              '
+              BEGIN
+              GRANT USAGE, CREATE ON SCHEMA ${schema} TO ${roleName};
+              GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA ${schema} TO ${roleName};
+              GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA ${schema} TO ${roleName};
+              END
+              '
+              LANGUAGE PLPGSQL;
+
+  - changeSet:
+      id: 5
+      author: TrucNguyen
+      comment: "Create User"
+      changes:
+        - sql:
+            sql:
+              DO
+              '
+              BEGIN
+              IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE  rolname = ''${usrName}'') THEN
+
+              ELSE
+              CREATE USER ${usrName} LOGIN PASSWORD ''${userPassword}'' IN ROLE ${roleName};
+              END IF;
+              END
+              '
+              LANGUAGE PLPGSQL;
